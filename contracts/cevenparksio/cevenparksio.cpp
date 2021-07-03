@@ -132,40 +132,15 @@ void cevenparksio::logininout( const name& username,
 	// verify password
 	check(password_hash == profile_it->password_hash, "the password doesn\'t match with the stored one.'");
 
-	profile_table.emplace(get_self(), [&](auto& row) {
+	// if already logged in i.e. 1, then is_logged_in value must be set to 0 to indicate as logging-out after log-in 
+	check(profile_it->is_logged_in != is_logged_in, "the parsed user login status is same as stored one.");
+
+	profile_table.modify(profile_it, get_self(), [&](auto& row) {
 		row.is_logged_in = is_logged_in;		
 	});
 
 }
 
-// --------------------------------------------------------------------------------------------------------------------
-void cevenparksio::enterpark( const name& username,
-								uint64_t park_id,
-								bool is_checked_in 
-								)
-{
-	require_auth(get_self());
-
-	// check if the park_id exists
-	parkinfo_index parkinfo_table(get_self(), park_id);
-	auto parkinfo_it = parkinfo_table.find(park_id);
-
-	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
-
-	userentry_index userentry_table(get_self(), get_self().value);
-	auto userentry_it = userentry_table.find(username.value);
-
-	if (userentry_it == userentry_table.end()) {
-		userentry_table.emplace(get_self(), [&](auto& row){
-			row.username = username;
-			row.is_checked_in = is_checked_in;
-		});
-	} else {
-		userentry_table.modify(userentry_it, get_self(), [&](auto& row){
-			row.is_checked_in = is_checked_in;
-		});
-	}
-}
 
 // --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::addparkdata( uint64_t tree_id,
@@ -252,6 +227,36 @@ void cevenparksio::delparktree( uint64_t park_id,
 
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+void cevenparksio::entrexitpark( const name& username,
+								uint64_t park_id,
+								bool is_checked_in 
+								)
+{
+	require_auth(get_self());
+
+	// check if the park_id exists
+	parkinfo_index parkinfo_table(get_self(), park_id);
+	auto parkinfo_it = parkinfo_table.find(park_id);
+
+	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
+
+	userentry_index userentry_table(get_self(), get_self().value);
+	auto userentry_it = userentry_table.find(username.value);
+
+	if (userentry_it == userentry_table.end()) {
+		userentry_table.emplace(get_self(), [&](auto& row){
+			row.username = username;
+			row.is_checked_in = is_checked_in;
+		});
+	} else {
+		userentry_table.modify(userentry_it, get_self(), [&](auto& row){
+			// if already checked in i.e. 1, then is_checked_in value must be set to 0 to indicate as checking-out after check-in 
+			check(userentry_it->is_checked_in != is_checked_in, "the parsed check-in status is same as stored one.");
+			row.is_checked_in = is_checked_in;
+		});
+	}
+}
 
 
 

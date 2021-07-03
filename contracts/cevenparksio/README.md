@@ -88,12 +88,63 @@ $ cleost get table cevenparksio cevenparksio profile --show-payer --lower cpusr1
 ```
 * user signup again
 ```console
-$ cleost push action cevenparksio signup '["cpusr1111111", "abhi3700@gmail.com", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76"]' -p cevenparksio@active
+$ cleost -u http://jungle3.cryptolions.io:80 push action cevenparksio signup '["cpusr1111111", "abhi3700@gmail.com", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76"]' -p cevenparksio@active
 Error 3050003: eosio_assert_message assertion failure
 Error Details:
 assertion failure with message: username already exists. So, no signup needed.
 pending console output:
 ```
+
+### ACTION - login
+* user login
+```console
+$ cleost push action cevenparksio logininout '["cpusr1111111", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76", "1"]' -p cevenparksio@active
+executed transaction: 301a54a47e4cda1e57bddda5fe9a94714ad975f892639f84b89571e92ceff171  136 bytes  243 us
+#  cevenparksio <= cevenparksio::logininout     {"username":"cpusr1111111","password_hash":"48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+* view table
+```console
+$ cleost get table cevenparksio cevenparksio profile --show-payer --lower cpusr1111111 --upper cpusr1111111
+{
+  "rows": [{
+      "data": {
+        "username": "cpusr1111111",
+        "email_id": "abhi3700@gmail.com",
+        "password_hash": "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76",
+        "is_logged_in": 1
+      },
+      "payer": "cevenparksio"
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+* user login again & gets error as the user is already logged in
+```console
+$ cleost push action cevenparksio logininout '["cpusr1111111", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76", "1"]' -p cevenparksio@active
+Error 3050003: eosio_assert_message assertion failure
+Error Details:
+assertion failure with message: the parsed user login status is same as stored one.
+pending console output:
+```
+* user logout
+```console
+$ cleost push action cevenparksio logininout '["cpusr1111111", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76", "0"]' -p cevenparksio@active
+executed transaction: 264cb2ce627f56585d7590932a6c20edc04eb73ce8b98ffa4c2197b7fe6ced3a  136 bytes  276 us
+#  cevenparksio <= cevenparksio::logininout     {"username":"cpusr1111111","password_hash":"48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+
+### ACTION - addparkdata
+
+### ACTION - editparkdata
+
+### ACTION - delparktree
+
+### ACTION - enterpark
 
 
 ## References

@@ -106,7 +106,7 @@
             ]
         },
         {
-            "name": "enterpark",
+            "name": "entrexitpark",
             "base": "",
             "fields": [
                 {
@@ -301,8 +301,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "enterpark",
-            "type": "enterpark",
+            "name": "entrexitpark",
+            "type": "entrexitpark",
             "ricardian_contract": ""
         },
         {

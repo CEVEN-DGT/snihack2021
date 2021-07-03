@@ -177,8 +177,8 @@ public:
 
 
 	/**
-	 * @brief - enter park with id
-	 * @details - enter park with id
+	 * @brief - enter/exit park with id
+	 * @details - enter/exit park with id
 	 * 
 	 * @param username - username
 	 * @param park_id - park id
@@ -186,7 +186,7 @@ public:
 	 * 
 	 * @pre - park id exists
 	 */
-	ACTION enterpark( const name& username,
+	ACTION entrexitpark( const name& username,
 					uint64_t park_id,
 					bool is_checked_in 
 					);
