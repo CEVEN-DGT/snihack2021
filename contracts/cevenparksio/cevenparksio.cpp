@@ -97,7 +97,8 @@ void cevenparksio::signup( const name& username,
 							) {
 	require_auth(get_self());
 
-	check(is_emailid_valid(email_id), "the email id is not valid");
+	// NOT RECOMMENDED as proceesing is heavy for the chain to do as RAM is expensive.
+	// check(is_emailid_valid(email_id), "the email id is not valid");
 
 	check(password_hash != checksum256(), "password hash can\'t be empty");
 

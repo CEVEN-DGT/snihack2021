@@ -2,7 +2,7 @@ Wallet (locally)
 ================
 name: cpeos
 password: "PW5KLoQRSzKrV4K7WEJxm3v98DRWvGdC26uhYTmKW3mFbte6x2CQ4"
-command: `cleos wallet unlock -n oya --password PW5KLoQRSzKrV4K7WEJxm3v98DRWvGdC26uhYTmKW3mFbte6x2CQ4`
+command: `cleos wallet unlock -n cpeos --password PW5KLoQRSzKrV4K7WEJxm3v98DRWvGdC26uhYTmKW3mFbte6x2CQ4`
 ########################################################################
 Jungle Testnet
 ************************************************************************************

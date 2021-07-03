@@ -8,7 +8,7 @@
 #include <map>
 #include <cstdlib>		// for strtoull
 #include <algorithm>			// for std::find_if
-#include <regex>
+// #include <regex>
 
 
 
@@ -35,7 +35,7 @@ using std::string;
 using std::vector;
 using std::map;
 using std::make_pair;
-using std::regex;
+// using std::regex;
 
 CONTRACT cevenparksio : public contract {
 public:
@@ -335,7 +335,7 @@ public:
 		return token_contract_ac;
 	}
 
-	bool is_emailid_valid( const string& email_id ) {
+/*	bool is_emailid_valid( const string& email_id ) {
 	  
 	    // Regular expression definition
 	    const regex pattern(
@@ -345,4 +345,6 @@ public:
 	    // with regular expression
 	    return regex_match(email_id, pattern);
 	}
+*/
+
 };

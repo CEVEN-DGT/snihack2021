@@ -40,7 +40,60 @@
 ## Compile
 
 ## Deploy
+* deploy contract
+```console
+$ cleost set contract cevenparksio ./
+Reading WASM from /mnt/f/Coding/github_repos/snihack2021/contracts/cevenparksio/cevenparksio.wasm...
+Publishing contract...
+executed transaction: 5ea53cdb43f1c5c981a0012476512c673f73fdc4205e02a7a8f7e59dc617a407  24432 bytes  1203 us
+#         eosio <= eosio::setcode               {"account":"cevenparksio","vmtype":0,"vmversion":0,"code":"0061736d0100000001c1022e60000060037f7f7f0...
+#         eosio <= eosio::setabi                {"account":"cevenparksio","abi":"0e656f73696f3a3a6162692f312e32000c0b6164647061726b64617461000907747...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+* Adding eosio.code to permissions (for inline actions)
+```console
+$ cleost set account permission cevenparksio active --add-code
+executed transaction: e76b11a8bc3477798b706242e37fb673c88b76b39c2fbe47937aaa43b2caf39a  184 bytes  152 us
+#         eosio <= eosio::updateauth            {"account":"cevenparksio","permission":"active","parent":"owner","auth":{"threshold":1,"keys":[{"key...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
 
 ## Testing
+### ACTION - signup
+* user signup
+```console
+$ cleost push action cevenparksio signup '["cpusr1111111", "abhi3700@gmail.com", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76"]' -p cevenparksio@active
+executed transaction: a3ca63bb0d0652f16b4ce3b5e908f3742c97c1417bf20466824b3afb8c3201df  152 bytes  261 us
+#  cevenparksio <= cevenparksio::signup         {"username":"cpusr1111111","email_id":"abhi3700@gmail.com","password_hash":"48357a7f102bb38d88d1aa5b...
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+* view table
+```console
+$ cleost get table cevenparksio cevenparksio profile --show-payer --lower cpusr1111111 --upper cpusr1111111
+{
+  "rows": [{
+      "data": {
+        "username": "cpusr1111111",
+        "email_id": "abhi3700@gmail.com",
+        "password_hash": "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76",
+        "is_logged_in": 0
+      },
+      "payer": "cevenparksio"
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+* user signup again
+```console
+$ cleost push action cevenparksio signup '["cpusr1111111", "abhi3700@gmail.com", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76"]' -p cevenparksio@active
+Error 3050003: eosio_assert_message assertion failure
+Error Details:
+assertion failure with message: username already exists. So, no signup needed.
+pending console output:
+```
+
 
 ## References
