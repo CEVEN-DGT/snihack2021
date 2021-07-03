@@ -1,4 +1,4 @@
-#include "oyanftmarket.hpp"
+#include "cevenparksio.hpp"
 
 // --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::depositfund( const name& from_ac, 
@@ -28,17 +28,17 @@ void cevenparksio::depositfund( const name& from_ac,
 	auto fund_it = fund_table.find(from_ac.value);
 
 	// update (emplace/modify) the deposit_qty
-	if(account_it == fund_table.end()) {
+	if(fund_it == fund_table.end()) {
 		fund_table.emplace(get_self(), [&](auto& row) {
 			row.username = from_ac;
-			row.balances = map<extended_symbol, uint64_t>{
+			row.deposit_qty = map<extended_symbol, uint64_t>{
 				make_pair(extended_symbol(quantity.symbol, get_first_receiver()), quantity.amount)
 			};
 		});
 	} 
 	else {
-		fund_table.modify(account_it, get_self(), [&](auto& row) {
-			creatify_balances_map(row.balances, quantity, 1, ""_n);		// 1 for add balance
+		fund_table.modify(fund_it, get_self(), [&](auto& row) {
+			creatify_balances_map(row.deposit_qty, quantity, 1, ""_n);		// 1 for add balance
 		});
 	}
 
@@ -94,17 +94,17 @@ void cevenparksio::depositfund( const name& from_ac,
 void cevenparksio::enterpark( const name& username,
 								uint64_t park_id,
 								bool is_checked_in 
-								);
+								)
 {
 	require_auth(get_self());
 
 	// check if the park_id exists
-	parkinfo_index parkinfo_table(get_self(), get_self());
+	parkinfo_index parkinfo_table(get_self(), park_id);
 	auto parkinfo_it = parkinfo_table.find(park_id);
 
 	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
 
-	userentry_index userentry_table(get_self(), get_self());
+	userentry_index userentry_table(get_self(), get_self().value);
 	auto userentry_it = userentry_table.find(username.value);
 
 	if (userentry_it == userentry_table.end()) {
@@ -172,18 +172,36 @@ void cevenparksio::editparkdata( uint64_t park_id,
 
 	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
 
-	// todo: check if the all data exist
 	parkinfo_table.modify( parkinfo_it, get_self(), [&](auto& row){
-		row.tree_id = tree_id;
-		row.lon = lon;
-		row.lat = lat;
-		row.species = species;
-		row.latin_species = latin_species;
-		row.year_planted = year_planted;
-		row.dbh = dbh;
-		row.height = height;
-		row.biomass = biomass;
+		if(tree_id != 0) row.tree_id = tree_id;
+		if(lon != 0) row.lon = lon;
+		if(lat != 0) row.lat = lat;
+		if(!species.empty()) row.species = species;
+		if(!latin_species.empty()) row.latin_species = latin_species;
+		if(year_planted != 0) row.year_planted = year_planted;
+		if(dbh != 0) row.dbh = dbh;
+		if(height != 0) row.height = height;
+		if(biomass != 0) row.biomass = biomass;
 	});
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+void cevenparksio::delparktree( uint64_t park_id,
+								uint64_t tree_id
+								) {
+	require_auth(get_self());
+
+	parkinfo_index parkinfo_table(get_self(), park_id);
+	auto parkinfo_it = parkinfo_table.find(park_id);
+
+	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
+
+	auto treeid_idx = parkinfo_table.get_index<"bytreeid"_n>();
+	auto treeid_it = treeid_idx.find(tree_id);
+
+	check(treeid_it != treeid_idx.end(), "tree id doesn\'t exist");
+	treeid_idx.erase(treeid_it);
+
 }
 
 

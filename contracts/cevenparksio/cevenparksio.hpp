@@ -87,7 +87,7 @@ public:
 	 * @param biomass - biomass
 	 * 
 	 */
-	void addparkdata( uint64_t tree_id,
+	ACTION addparkdata( uint64_t tree_id,
 						double lon,
 						double lat,
 						string species,
@@ -114,7 +114,7 @@ public:
 	 * @param biomass - biomass
 	 * 
 	 */
-	void editparkdata( uint64_t park_id,
+	ACTION editparkdata( uint64_t park_id,
 						uint64_t tree_id,
 						double lon,
 						double lat,
@@ -126,20 +126,20 @@ public:
 						float biomass
 						);
 
-	void delparktree( uint64_t park_id,
-						uint64_t tree_id,
+	ACTION delparktree( uint64_t park_id,
+						uint64_t tree_id
 						);
 
 
 
-	void enterpark( const name& username,
+	ACTION enterpark( const name& username,
 					uint64_t park_id,
 					bool is_checked_in 
 					);
 
 
 
-
+	// ==================================================================================
 	// scope: self
 	TABLE userentry
 	{
@@ -151,6 +151,7 @@ public:
 
 	using userentry_index = multi_index<"userentry"_n, userentry>;
 
+	//-----------------------------------------------------------------------------------
 	// scope: park_id 
 	TABLE parkinfo
 	{
@@ -166,10 +167,14 @@ public:
 		float biomass;
 
 		auto primary_key() const { return park_id; }
+		uint64_t by_treeid() const { return tree_id; }
 	};
 
-	using parkinfo_index = multi_index<"parkinfo"_n, parkinfo>;
+	using parkinfo_index = multi_index<"parkinfo"_n, parkinfo,
+								indexed_by< "bytreeid"_n, const_mem_fun<parkinfo, uint64_t, &parkinfo::by_treeid>>
+								>;
 
+	//-----------------------------------------------------------------------------------
 	// scope: self
 	TABLE fund
 	{
@@ -184,12 +189,83 @@ public:
 			
 			Here, quantity amount is 30000/10^4 = 3 i.e. asset is "3.0000 SOV"
 		*/
-		map<extended_symbol, uint64_t> balances; // map with extended_symbol, uint64_t
+		map<extended_symbol, uint64_t> deposit_qty; // map with extended_symbol, uint64_t
 
-		auto primary_key() const { return deposit_qty.symbol.code().raw(); }
+		auto primary_key() const { return username.value; }
 	};
 
 	using fund_index = multi_index<"fund"_n, fund>;
 
+	// ==================================================================================
+	// get the current timestamp
+	inline uint32_t now() const {
+		return current_time_point().sec_since_epoch();
+	}
 
-}
+	/*	
+		Here, 2 cases are covered in which the balances map is modified when the row with (owner, balances) exist: 
+			- case-1: if the row exists & key is found. i.e. the parsed quantity symbol is found
+				- add/sub quantity amount is done by an arithmetic_op (0/1) => (-/+) 
+			- case-2: if the row exists & key is NOT found. i.e. the parsed quantity symbol is NOT found 
+	*/	
+	inline void creatify_balances_map( map<extended_symbol, uint64_t>& m, const asset& qty, 
+								bool arithmetic_op, 			// add/sub balance from existing quantity
+								const name& token_contract_name ) {
+		auto s_it = std::find_if(m.begin(), m.end(), 
+							[&](auto& ms) {return ms.first.get_symbol() == qty.symbol;});
+		
+		if(s_it != m.end()) {		// key found
+			if (arithmetic_op == 1)
+				s_it->second += qty.amount;
+			else if (arithmetic_op == 0)
+				s_it->second -= qty.amount;
+		}
+		else {						// key NOT found
+			if (token_contract_name == ""_n)
+				m.insert( make_pair(extended_symbol(qty.symbol, get_first_receiver()), qty.amount) );
+			else
+				m.insert( make_pair(extended_symbol(qty.symbol, capture_contract_in_map(m, qty)), qty.amount) );
+		}
+	}
+
+	/*	
+		Here, 2 cases are covered in which the balances map is checked for <>= than the given quantity, when the row with (owner, balances) exist: 
+			- case-1: if the row exists & key is found. i.e. the parsed quantity symbol is found
+				- check for >= , else throw message
+			- case-2: if the row exists & key is NOT found. i.e. the parsed quantity symbol is NOT found 
+				- throw message saying that there is no balances available
+	*/	
+	inline void compare_amount_in_map( map<extended_symbol, uint64_t> m, const asset& qty ) {
+		auto s_it = std::find_if(m.begin(), m.end(), 
+							[&](auto& ms) {return ms.first.get_symbol() == qty.symbol;});
+		
+		if(s_it != m.end()) {		// key found
+			check( s_it->second >= qty.amount, "Insufficient balance in from\'s account." );
+		}
+		else {						// key NOT found
+			check( false, "there is no balances available corresponding to the parsed quantity symbol for the given from_id." );
+		}
+	}
+
+	/*	
+		Here, capture the token contract name in which the balances map exists in the row with (owner, balances) exist: 
+			- case-1: if the row exists & key is found. i.e. the parsed quantity symbol is found
+				- capture the contract ac name from the key
+	*/	
+	inline name capture_contract_in_map( map<extended_symbol, uint64_t> m, const asset& qty ) {
+		name token_contract_ac = ""_n;
+
+		auto s_it = std::find_if(m.begin(), m.end(), 
+							[&](auto& ms) {return ms.first.get_symbol() == qty.symbol;});
+		
+		if(s_it != m.end()) {		// key found
+			token_contract_ac = s_it->first.get_contract();
+		}
+		else {
+			check(false, "there is no contract account found with this quantity");
+		}
+
+		return token_contract_ac;
+	}
+
+};
