@@ -91,6 +91,53 @@ void cevenparksio::depositfund( const name& from_ac,
 // }
 
 // --------------------------------------------------------------------------------------------------------------------
+void cevenparksio::signup( const name& username,
+							string email_id,
+							checksum256 password_hash
+							) {
+	require_auth(get_self());
+
+	check(is_emailid_valid(email_id), "the email id is not valid");
+
+	check(password_hash != checksum256(), "password hash can\'t be empty");
+
+	profile_index profile_table(get_self(), get_self().value);
+	auto profile_it = profile_table.find(username.value);
+
+	check(profile_it == profile_table.end(), "username already exists. So, no signup needed.");
+
+	profile_table.emplace(get_self(), [&](auto& row) {
+		row.username = username;
+		row.email_id = email_id;
+		row.password_hash = password_hash;
+	});
+
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+void cevenparksio::logininout( const name& username,
+									checksum256 password_hash,
+									bool is_logged_in
+									) {
+	require_auth(get_self());
+
+	check(password_hash != checksum256(), "password hash can\'t be empty");
+
+	profile_index profile_table(get_self(), get_self().value);
+	auto profile_it = profile_table.find(username.value);
+
+	check(profile_it != profile_table.end(), "username doesn\'t exist. Please, sign-up first");
+
+	// verify password
+	check(password_hash == profile_it->password_hash, "the password doesn\'t match with the stored one.'");
+
+	profile_table.emplace(get_self(), [&](auto& row) {
+		row.is_logged_in = is_logged_in;		
+	});
+
+}
+
+// --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::enterpark( const name& username,
 								uint64_t park_id,
 								bool is_checked_in 

@@ -8,6 +8,7 @@
 #include <map>
 #include <cstdlib>		// for strtoull
 #include <algorithm>			// for std::find_if
+#include <regex>
 
 
 
@@ -34,6 +35,7 @@ using std::string;
 using std::vector;
 using std::map;
 using std::make_pair;
+using std::regex;
 
 CONTRACT cevenparksio : public contract {
 public:
@@ -73,19 +75,51 @@ public:
 	// 					);
 
 	/**
+	 * @brief - sign up or register for new user
+	 * @details - sign up or register for new user
+	 * 
+	 * @param username - username
+	 * @param email_id - email id
+	 * @param password - password
+	 * 
+	 * @pre - password hash
+	 */
+	ACTION signup( const name& username,
+					string email_id,
+					checksum256 password_hash
+					);
+
+
+	/**
+	 * @brief - login in/out
+	 * @details - login in/out
+	 * 
+	 * @param username - username
+	 * @param is_logged_in - is logged in
+	 * 
+	 * @pre - username must exist
+	 * @pre - password hash should match with the stored one
+	 */
+	ACTION logininout( const name& username,
+						checksum256 password_hash,
+						bool is_logged_in
+						);
+
+	/**
 	 * @brief - add park data
 	 * @details - Here, park data is to be added by creating a unique id (timestamp, hash).
 	 * 
 	 * @param tree_id - tree id 
-	 * @param lon - tree id 
-	 * @param lat - tree id 
-	 * @param species - tree id 
-	 * @param latin_species - tree id 
-	 * @param year_planted - tree id 
-	 * @param dbh - tree id 
+	 * @param lon - lon 
+	 * @param lat - lat 
+	 * @param species - species 
+	 * @param latin_species - latin species 
+	 * @param year_planted - year planted
+	 * @param dbh - dbh
 	 * @param height - height
 	 * @param biomass - biomass
 	 * 
+	 * @pre - park id to be created
 	 */
 	ACTION addparkdata( uint64_t tree_id,
 						double lon,
@@ -100,19 +134,21 @@ public:
 
 
 	/**
-	 * @brief - add park data
-	 * @details - Here, park data is to be added
+	 * @brief - edit park data
+	 * @details - Here, park data is to be edited
 	 * 
+	 * @param park_id - park id 
 	 * @param tree_id - tree id 
-	 * @param lon - tree id 
-	 * @param lat - tree id 
-	 * @param species - tree id 
-	 * @param latin_species - tree id 
-	 * @param year_planted - tree id 
-	 * @param dbh - tree id 
+	 * @param lon - lon 
+	 * @param lat - lat 
+	 * @param species - species 
+	 * @param latin_species - latin species 
+	 * @param year_planted - year planted
+	 * @param dbh - dbh
 	 * @param height - height
 	 * @param biomass - biomass
 	 * 
+	 * @pre - park id exists
 	 */
 	ACTION editparkdata( uint64_t park_id,
 						uint64_t tree_id,
@@ -126,18 +162,49 @@ public:
 						float biomass
 						);
 
+	/**
+	 * @brief - delete park tree
+	 * @details - delete park tree
+	 * 
+	 * @param park_id - park id
+	 * @param tree_id - tree id
+	 * 
+	 * @pre - park id exists
+	 */
 	ACTION delparktree( uint64_t park_id,
 						uint64_t tree_id
 						);
 
 
-
+	/**
+	 * @brief - enter park with id
+	 * @details - enter park with id
+	 * 
+	 * @param username - username
+	 * @param park_id - park id
+	 * @param is_checked_in - loggedin/loggedout
+	 * 
+	 * @pre - park id exists
+	 */
 	ACTION enterpark( const name& username,
 					uint64_t park_id,
 					bool is_checked_in 
 					);
 
 
+	// ==================================================================================
+	// scope: self
+	TABLE profile
+	{
+		name username;
+		string email_id;
+		checksum256 password_hash;
+		bool is_logged_in;			// (0: loggedout, 1: loggedin)
+
+		auto primary_key() const { return username.value; }
+	};
+
+	using profile_index = multi_index<"profile"_n, profile>;
 
 	// ==================================================================================
 	// scope: self
@@ -268,4 +335,14 @@ public:
 		return token_contract_ac;
 	}
 
+	bool is_emailid_valid( const string& email_id ) {
+	  
+	    // Regular expression definition
+	    const regex pattern(
+	        "(\\w+)(\\.|_)?(\\w*)@(\\w+)(\\.(\\w+))+");
+	  
+	    // Match the string pattern
+	    // with regular expression
+	    return regex_match(email_id, pattern);
+	}
 };

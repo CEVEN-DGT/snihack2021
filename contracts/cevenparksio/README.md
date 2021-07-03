@@ -6,13 +6,20 @@
 * All the ACTIONs are permissioned by contract.
 
 ## ACTION
-* `userentry`
+* `depostfund`
+<!-- * `withdrawfund` -->
+* `signup`
+* `login`
 * `addparkdata`
 * `delparktree`
-* `depostfund`
-* `withdrawfund`
+* `enterpark`
 
 ## TABLE
+* `profile`
+	- username
+	- email_id
+	- password_hash
+	- is_logged_in
 * `userentry` (scope: self)
 	- username
 	- is_checked_in (0: outside, 1: inside)

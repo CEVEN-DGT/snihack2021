@@ -152,6 +152,24 @@
             ]
         },
         {
+            "name": "logininout",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                },
+                {
+                    "name": "password_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "is_logged_in",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
             "name": "pair_extended_symbol_uint64",
             "base": "",
             "fields": [
@@ -212,6 +230,46 @@
             ]
         },
         {
+            "name": "profile",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                },
+                {
+                    "name": "email_id",
+                    "type": "string"
+                },
+                {
+                    "name": "password_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "is_logged_in",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "signup",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                },
+                {
+                    "name": "email_id",
+                    "type": "string"
+                },
+                {
+                    "name": "password_hash",
+                    "type": "checksum256"
+                }
+            ]
+        },
+        {
             "name": "userentry",
             "base": "",
             "fields": [
@@ -246,6 +304,16 @@
             "name": "enterpark",
             "type": "enterpark",
             "ricardian_contract": ""
+        },
+        {
+            "name": "logininout",
+            "type": "logininout",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "signup",
+            "type": "signup",
+            "ricardian_contract": ""
         }
     ],
     "tables": [
@@ -259,6 +327,13 @@
         {
             "name": "parkinfo",
             "type": "parkinfo",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "profile",
+            "type": "profile",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
