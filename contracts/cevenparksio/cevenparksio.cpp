@@ -141,6 +141,16 @@ void cevenparksio::logininout( const name& username,
 
 }
 
+void cevenparksio::deluser( const name& username ) {
+	require_auth(get_self());
+
+	profile_index profile_table(get_self(), get_self().value);
+	auto profile_it = profile_table.find(username.value);
+
+	check(profile_it != profile_table.end(), "username doesn\'t exist. Please, sign-up first");
+
+	profile_table.erase(profile_it);
+}
 
 // --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::addparkdata( uint64_t tree_id,

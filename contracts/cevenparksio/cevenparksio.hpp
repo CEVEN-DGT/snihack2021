@@ -106,6 +106,14 @@ public:
 						);
 
 	/**
+	 * @brief - delete user
+	 * @details - delete username
+	 * 
+	 * @param username - username
+	 */
+	ACTION deluser( const name& username );
+
+	/**
 	 * @brief - add park data
 	 * @details - Here, park data is to be added by creating a unique id (timestamp, hash).
 	 * 

@@ -60,6 +60,16 @@
             ]
         },
         {
+            "name": "deluser",
+            "base": "",
+            "fields": [
+                {
+                    "name": "username",
+                    "type": "name"
+                }
+            ]
+        },
+        {
             "name": "editparkdata",
             "base": "",
             "fields": [
@@ -293,6 +303,11 @@
         {
             "name": "delparktree",
             "type": "delparktree",
+            "ricardian_contract": ""
+        },
+        {
+            "name": "deluser",
+            "type": "deluser",
             "ricardian_contract": ""
         },
         {

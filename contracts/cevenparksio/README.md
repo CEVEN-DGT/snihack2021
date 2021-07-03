@@ -38,6 +38,16 @@
 	- deposit_qty
 
 ## Compile
+```console
+$ eosio-cpp cevenparksio.cpp -o cevenparksio.wasm
+Warning, action <signup> does not have a ricardian contract
+Warning, action <logininout> does not have a ricardian contract
+Warning, action <deluser> does not have a ricardian contract
+Warning, action <addparkdata> does not have a ricardian contract
+Warning, action <editparkdata> does not have a ricardian contract
+Warning, action <delparktree> does not have a ricardian contract
+Warning, action <entrexitpark> does not have a ricardian contract
+```
 
 ## Deploy
 * deploy contract
@@ -45,9 +55,9 @@
 $ cleost set contract cevenparksio ./
 Reading WASM from /mnt/f/Coding/github_repos/snihack2021/contracts/cevenparksio/cevenparksio.wasm...
 Publishing contract...
-executed transaction: 5ea53cdb43f1c5c981a0012476512c673f73fdc4205e02a7a8f7e59dc617a407  24432 bytes  1203 us
+executed transaction: 5ceec83ba99129f5d08ebfda56e28a2ff5e56bca1bdc29e4847fe3b0f86acdd7  24848 bytes  2207 us
 #         eosio <= eosio::setcode               {"account":"cevenparksio","vmtype":0,"vmversion":0,"code":"0061736d0100000001c1022e60000060037f7f7f0...
-#         eosio <= eosio::setabi                {"account":"cevenparksio","abi":"0e656f73696f3a3a6162692f312e32000c0b6164647061726b64617461000907747...
+#         eosio <= eosio::setabi                {"account":"cevenparksio","abi":"0e656f73696f3a3a6162692f312e32000d0b6164647061726b64617461000907747...
 warning: transaction executed locally, but may not be confirmed by the network yet         ]
 ```
 * Adding eosio.code to permissions (for inline actions)
@@ -144,7 +154,7 @@ warning: transaction executed locally, but may not be confirmed by the network y
 
 ### ACTION - delparktree
 
-### ACTION - enterpark
+### ACTION - entrexitpark
 
 
 ## References
