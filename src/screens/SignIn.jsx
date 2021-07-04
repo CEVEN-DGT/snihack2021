@@ -73,8 +73,8 @@ class SignIn extends Component {
       placeholder={"Enter email"}
       setInput={this.setValue}
       valueType={"email"}
+      sync={true}
      />
-
      <TextInput
       label={"Password"}
       type={"password"}

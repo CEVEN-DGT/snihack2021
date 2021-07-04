@@ -88,8 +88,10 @@ html,
  background: transparent !important;
  color: #167bff !important;
  box-shadow: none !important;
- margin: 20px 0 !important;
  padding: 10px 20px !important;
+}
+.form-group {
+ margin: 0 !important;
 }
 .signup-main-container {
  width: 30%;
@@ -150,7 +152,22 @@ html,
  position: absolute;
  left: 20px;
 }
-
+.input-with-sync-btn {
+ display: flex;
+ align-items: center;
+ position: relative;
+ margin: 20px 0 !important;
+}
+.input-sync-btn {
+ position: absolute;
+ right: 10px;
+ outline: none;
+ border: none;
+ background: none;
+ font-size: 14px;
+ color: #167bff;
+ opacity: 0.7;
+}
 @media only screen and (max-width: 768px) {
  .signup-main-container {
   width: 100%;
