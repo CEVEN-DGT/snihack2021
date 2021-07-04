@@ -177,5 +177,94 @@ executed transaction: 7ca9ac3a5f1704fa6b21a7c60013f1f49d56dcb702baa19bd762584439
 warning: transaction executed locally, but may not be confirmed by the network yet         ]
 ```
 
+### Action - `deposit` (on_notify action)
+#### EOS
+* `cpusr1111111` transfer some quantity (in EOS) to contract account
+  - show the cevenparksio accounts balance of `cpusr1111111`
+```console
+$ cleost get table cevenparksio cevenparksio fund --show-payer --lower cpusr1111111 --upper cpusr1111111
+{
+  "rows": [],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+  - show the eosio.token balance (EOS) of `cpusr1111111`
+```console
+$ cleost get table eosio.token cpusr1111111 accounts --show-payer
+{
+  "rows": [{
+      "data": {
+        "balance": "100.0000 EOS"
+      },
+      "payer": "junglefaucet"
+    },{
+      "data": {
+        "balance": "100.0000 JUNGLE"
+      },
+      "payer": "junglefaucet"
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+  - transfer
+```console
+$ cleost push action eosio.token transfer '["cpusr1111111", "cevenparksio", "1.0000 EOS", "deposit"]' -p cpusr1111111@active
+executed transaction: 9584cd58c4aadfcca981123a63ebd79cdab548ae2f20ce599739570e722fbcb4  136 bytes  344 us
+#   eosio.token <= eosio.token::transfer        {"from":"cpusr1111111","to":"cevenparksio","quantity":"1.0000 EOS","memo":"deposit"}
+#  cpusr1111111 <= eosio.token::transfer        {"from":"cpusr1111111","to":"cevenparksio","quantity":"1.0000 EOS","memo":"deposit"}
+#  cevenparksio <= eosio.token::transfer        {"from":"cpusr1111111","to":"cevenparksio","quantity":"1.0000 EOS","memo":"deposit"}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+  - show the cevenparksio accounts balance of `cpusr1111111`
+```console
+$ cleost get table cevenparksio cevenparksio fund --show-payer --lower cpusr1111111 --upper cpusr1111111
+{
+  "rows": [{
+      "data": {
+        "username": "cpusr1111111",
+        "deposit_qty": [{
+            "key": {
+              "sym": "4,EOS",
+              "contract": "eosio.token"
+            },
+            "value": 10000
+          }
+        ]
+      },
+      "payer": "cevenparksio"
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+  - show the eosio.token (EOS) balance of `cpusr1111111`
+```console
+$ cleost get table eosio.token cpusr1111111 accounts --show-payer
+{
+  "rows": [{
+      "data": {
+        "balance": "99.0000 EOS"
+      },
+      "payer": "cpusr1111111"
+    },{
+      "data": {
+        "balance": "100.0000 JUNGLE"
+      },
+      "payer": "junglefaucet"
+    }
+  ],
+  "more": false,
+  "next_key": "",
+  "next_key_bytes": ""
+}
+```
+
 
 ## References
