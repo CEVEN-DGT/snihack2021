@@ -1,15 +1,17 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
-
 import AppServices from "../services/AppService";
 import ValidationService from "../services/ValidationService";
 import BlockchainService from "../services/BlockchainService";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
+import CoverImg from "../assets/images/Header.png";
+import CryptoJs from 'crypto-js';
+
 
 class SignUp extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       user: {
@@ -18,118 +20,143 @@ class SignUp extends Component {
         confirmPass: "",
         username: ""
       }
-    }
+    };
 
-    this.appService = new AppServices()
-    this.validationService = new ValidationService()
-    this.blockchainService = new BlockchainService()
+    this.appService = new AppServices();
+    this.validationService = new ValidationService();
+    this.blockchainService = new BlockchainService();
   }
-
 
   setValue = (value, type) => {
     let user = this.state.user;
     user[type] = value;
-    this.setState({ user })
-  }
+    this.setState({ user });
+  };
 
+  handleUser = async (sync) => {
+    let user = this.state.user;
+    let isEamilValid = this.validationService.isEmailValid(user.email);
+    let isPassValid = this.validationService.isPasswordStrong(user.password);
+    let isPasswordMatched = this.validationService.isPasswordMatched(
+      user.password,
+      user.confirmPass
+    );
 
-  handleUser = () => {
+    let isValidUserName = await this.checkUserNameAvailibility(sync);
 
-    let user = this.state.user
-    debugger;
-    console.log("User = ", user)
-    let isEamilValid = this.validationService.isEmailValid(user.email)
-    let isPassValid = this.validationService.isPasswordStrong(user.password)
-    let isPasswordMatched = this.validationService.isPasswordMatched(user.password, user.confirmPass)
+    if (
+      isEamilValid.success &&
+      isPassValid.success &&
+      isPasswordMatched.success &&
+      isValidUserName.success
+    ) {
+      let username = user.username
+      let email = user.email
+      let passwordHash = this.hashIt(user.password)
 
-    if (isEamilValid.success && isPassValid.success && isPasswordMatched.success) {
-      this.props.notify("success", "Login successfully")
-      // setTimeout(() => {
-      //   this.props.history.push('/home')
-      // }, 2000);
+      let signUpAction = this.blockchainService.signUpAction(username, email, passwordHash)
+
+      const result = await this.blockchainService.defaultPushAction(signUpAction);
+      console.log("Result = ", result);
+      if (result.success) {
+        this.props.notify("success", "Accuount created successfully");
+        setTimeout(() => {
+          this.props.history.push("/home");
+        }, 2000);
+      } else {
+        this.props.notify("error", result.message);
+      }
     } else {
-      if (!isEamilValid.success) {
-        this.props.notify("error", isEamilValid.message)
-      }
-      else if (!isPassValid.success) {
-        this.props.notify("error", isPassValid.message)
-      }
-      else if (!isPasswordMatched.success) {
-        this.props.notify("error", isPasswordMatched.message)
+      debugger;
+      if (!isValidUserName.success) {
+        this.props.notify("error", isValidUserName.message);
+      } else if (!sync && !isEamilValid.success) {
+        this.props.notify("error", isEamilValid.message);
+      } else if (!sync && !isPassValid.success) {
+        this.props.notify("error", isPassValid.message);
+      } else if (!sync && !isPasswordMatched.success) {
+        this.props.notify("error", isPasswordMatched.message);
       }
     }
+  };
 
-  }
-
-  checkUserNameAvailibility = async () => {
+  checkUserNameAvailibility = async (sync) => {
+    let isValidUserName = { success: false, message: "invalid username" }
     let userName = this.state.user.username;
-
-    console.log("username = ", userName)
     let isUserNameValid = this.validationService.isValidUserName(userName);
 
     if (isUserNameValid.success) {
-      // this.props.notify("success", "Valid user Name")
       let res = await this.blockchainService.getAccountInfo(userName)
-      console.log("Res ", res)
+      if (res) {
+        isValidUserName.message = "Account already exists"
+      } else {
+        isValidUserName.message = "Username available"
+        isValidUserName.success = true
+        if (sync)
+          this.props.notify("success", isValidUserName.message);
+      }
     } else {
-      this.props.notify("error", "invalid username")
+      isValidUserName.message = "Invalid username"
     }
 
-
+    return isValidUserName
   }
 
+  hashIt = (password) => {
+    const hashed = CryptoJs.SHA256(password).toString()
+    return hashed
+  }
 
   render() {
     return (
-      <div style={{ width: "30%", margin: "auto", marginTop: "10%" }}>
-        <h3>Sign Up</h3>
+      <div className="signup-main-container">
+        <div className="cover-img-container">
+          <img src={CoverImg} alt="cover" />
+        </div>
+        <div className="signup-content-contianer">
+          <TextInput
+            label={"User Name"}
+            type={"text"}
+            placeholder={"Enter EOS username"}
+            setInput={this.setValue}
+            valueType={"username"}
+            sync={true}
+            onSync={() => this.handleUser(true)}
+          />
 
-        <TextInput
-          label={"User Name"}
-          type={"text"}
-          placeholder={"Enter EOS user name"}
-          setInput={this.setValue}
-          valueType={"username"}
-        />
+          <TextInput
+            label={"Email"}
+            type={"email"}
+            placeholder={"Enter email"}
+            setInput={this.setValue}
+            valueType={"email"}
+          />
 
-        <Button
-          label={"Check availability"}
-          onClick={this.checkUserNameAvailibility}
-        />
+          <TextInput
+            label={"Password"}
+            type={"password"}
+            placeholder={"Enter password"}
+            setInput={this.setValue}
+            valueType={"password"}
+          />
 
-        <TextInput
-          label={"Email"}
-          type={"email"}
-          placeholder={"Enter email"}
-          setInput={this.setValue}
-          valueType={"email"}
-        />
+          <TextInput
+            label={"Confirm Password"}
+            type={"password"}
+            placeholder={"Enter password"}
+            setInput={this.setValue}
+            valueType={"confirmPass"}
+          />
 
-        <TextInput
-          label={"Password"}
-          type={"password"}
-          placeholder={"Enter password"}
-          setInput={this.setValue}
-          valueType={"password"}
-
-        />
-
-        <TextInput
-          label={"Confirm Password"}
-          type={"password"}
-          placeholder={"Enter password"}
-          setInput={this.setValue}
-          valueType={"confirmPass"}
-
-        />
-
-        <Button
-          label={"Continue"}
-          onClick={this.handleUser}
-        />
+          <Button label={"Continue"} onClick={() => this.handleUser(false)} />
+          <div className="line" />
+          <button className="login-with-google-btn">
+            <i className="fab fa-google-plus-g"></i>Login with google
+          </button>
+        </div>
       </div>
     );
   }
 }
 
-export default withRouter(SignUp)
+export default withRouter(SignUp);

@@ -3,24 +3,20 @@ import { Api, JsonRpc, RpcError } from "eosjs";
 import { JsSignatureProvider } from "eosjs/dist/eosjs-jssig";
 
 const chainId = process.env.REACT_APP_CHAINID;
-const signatureProvider = new JsSignatureProvider([]);
-const rpcUrl =
-  process.env.REACT_APP_NETWORK_PROTOCOL +
-  "://" +
-  process.env.REACT_APP_RPC +
-  ":" +
-  process.env.REACT_APP_NETWORK_PORT;
+const defaultPrivateKeyTest = process.env.REACT_APP_DEFAULT_KEY;
+const signatureProvider = new JsSignatureProvider([defaultPrivateKeyTest]);
+const rpcUrl = process.env.REACT_APP_NETWORK_PROTOCOL + "://" + process.env.REACT_APP_RPC + ":" + process.env.REACT_APP_NETWORK_PORT;
 const rpc = new JsonRpc(rpcUrl, { fetch });
 const api = new Api({ rpc, signatureProvider, chainId });
-const tokenSymbol = process.env.REACT_APP_TOKEN_PRECISION +
-  "," +
-  process.env.REACT_APP_TOKEN_SYMBOL;
+const tokenSymbol = process.env.REACT_APP_TOKEN_PRECISION + "," + process.env.REACT_APP_TOKEN_SYMBOL;
 
 export default class BlockchainService extends React.Component {
   constructor(props) {
     super(props);
 
     this.eosioTokenContract = "eosio.token";
+    this.mainContract = "cevenparksio";
+    this.mainAccount = "cevenparksio";
     this.tokenSymbol =
       process.env.REACT_APP_TOKEN_PRECISION +
       "," +
@@ -104,7 +100,7 @@ export default class BlockchainService extends React.Component {
     };
 
     try {
-      const result = await this.api.transact(trx, {
+      const result = await api.transact(trx, {
         blocksBehind: 3,
         expireSeconds: 30,
       });
@@ -149,4 +145,20 @@ export default class BlockchainService extends React.Component {
     }
     return res;
   };
+
+  signUpAction = (username, email_id, password_hash) => {
+    let contract = this.mainContract;
+    let actionName = "signup";
+    let authorization = this.getAuthorization(this.mainContract, "active");
+
+    let data = {
+      username,
+      email_id,
+      password_hash
+    };
+
+    let action = this.getAction(contract, actionName, data, [authorization]);
+    return action;
+  };
+
 }
