@@ -178,7 +178,7 @@ export default class BlockchainService extends React.Component {
 
   enteryExitParkAction = (username, park_id, is_checked_in) => {
     let contract = this.mainContract;
-    let actionName = "enterexitpark";
+    let actionName = "entrexitpark";
     let authorization = this.getAuthorization(this.mainContract, "active");
 
     let data = {
@@ -190,5 +190,14 @@ export default class BlockchainService extends React.Component {
     let action = this.getAction(contract, actionName, data, [authorization]);
     return action;
   };
+
+  getParkData = async (scope) => {
+    let code = this.mainContract;
+    let table = "parkinfo";
+    let json = true;
+    var res = await api.rpc.get_table_rows({ json, code, scope, table });
+    return res.rows;
+  }
+
 
 }
