@@ -20,6 +20,8 @@ h1, h2 {
     left: 50%;
     top: 5vh;
     transform: translateX(-50%);
+    color: black;
+    
 }
 h1 {
     font-size: 5vh
@@ -31,20 +33,32 @@ p {
     max-width: 500px;
     margin-left: 10px;
     margin-right: 10px;
+    color: black;
 }
 .shadow {
     text-shadow: 0 0 100px #000;
 }
 
-a.button {
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-
-    text-decoration: none;
-    color: initial;
+.example_a {
+	color: #fff !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	background: #316d2c;
+	padding: 20px;
+	border-radius: 5px;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
 }
 
+.example_a:hover {
+	background: #434343;
+	letter-spacing: 1px;
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	box-shadow: 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+}
 
 
 /* the cover image */
@@ -99,7 +113,7 @@ a.button {
     font-size: 10vw;
     
     width: 70%;
-    color: white;
+    color: black;
     
     animation: slide 1s forwards;
 
@@ -125,7 +139,7 @@ a.button {
     bottom: 10%;
     left: 50%;
     transform: translateX(-50%);
-    color: white;
+    color: black;
     font-size: 10vw;
     font-weight: lighter;
     
@@ -145,7 +159,7 @@ a.button {
 
 
 .page:nth-child(odd) {
-    background-color: #000;
+    background-color: #fff;
     color: #fff;
 }
 .features > div {
@@ -173,7 +187,7 @@ a.button {
 
 .page:nth-child(even) {
     background-color: #fff;
-    color: #000;
+    color: #fff;
 }
 #end {
     color: #fff;
