@@ -124,7 +124,7 @@
             ]
         },
         {
-            "name": "logininout",
+            "name": "login",
             "base": "",
             "fields": [
                 {
@@ -134,10 +134,6 @@
                 {
                     "name": "password_hash",
                     "type": "checksum256"
-                },
-                {
-                    "name": "is_logged_in",
-                    "type": "bool"
                 }
             ]
         },
@@ -288,8 +284,8 @@
             "ricardian_contract": ""
         },
         {
-            "name": "logininout",
-            "type": "logininout",
+            "name": "login",
+            "type": "login",
             "ricardian_contract": ""
         },
         {

@@ -101,10 +101,9 @@ public:
 	 * @pre - username must exist
 	 * @pre - password hash should match with the stored one
 	 */
-	ACTION logininout( const name& username,
-						checksum256 password_hash,
-						bool is_logged_in
-						);
+	ACTION login( const name& username,
+					checksum256 password_hash
+					);
 
 	/**
 	 * @brief - login out

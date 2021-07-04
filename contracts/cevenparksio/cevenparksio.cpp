@@ -116,10 +116,9 @@ void cevenparksio::signup( const name& username,
 }
 
 // --------------------------------------------------------------------------------------------------------------------
-void cevenparksio::logininout( const name& username,
-									checksum256 password_hash,
-									bool is_logged_in
-									) {
+void cevenparksio::login( const name& username,
+							checksum256 password_hash
+							) {
 	require_auth(get_self());
 
 	check(password_hash != checksum256(), "password hash can\'t be empty");
@@ -132,11 +131,8 @@ void cevenparksio::logininout( const name& username,
 	// verify password
 	check(password_hash == profile_it->password_hash, "the password doesn\'t match with the stored one.'");
 
-	// if already logged in i.e. 1, then is_logged_in value must be set to 0 to indicate as logging-out after log-in 
-	check(profile_it->is_logged_in != is_logged_in, "the parsed user login status is same as stored one.");
-
 	profile_table.modify(profile_it, get_self(), [&](auto& row) {
-		row.is_logged_in = is_logged_in;		
+		row.is_logged_in = 1;		
 	});
 
 }
