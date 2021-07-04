@@ -1,74 +1,174 @@
-@import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
 
 * {
-  box-sizing: border-box;
+ box-sizing: border-box;
 }
 body {
-  background: #1C8EF9 !important;
-  min-height: 100vh;
-  display: flex;
-  font-weight: 400;
-  font-family: 'Fira Sans', sans-serif;
+ /* background: #1c8ef9 !important; */
+ min-height: 100vh;
+ display: flex;
+ font-weight: 400;
+ font-family: "Fira Sans", sans-serif;
 }
 
-h1,h2,h3,h4,h5,h6,label,span {
-  font-weight: 500;
-  font-family: 'Fira Sans', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+span {
+ font-weight: 500;
+ font-family: "Fira Sans", sans-serif;
 }
 
-body, html, .App, #root, .auth-wrapper {
-  width: 100%;
-  height: 100%;
+body,
+html,
+.App,
+#root,
+.auth-wrapper {
+ width: 100%;
+ height: 100%;
 }
 
 .navbar-light {
-  background-color: #ffffff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+ background-color: #ffffff;
+ box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
 }
 
 .auth-wrapper {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  text-align: left;
+ display: flex;
+ justify-content: center;
+ flex-direction: column;
+ text-align: left;
 }
 
 .auth-inner {
-  width: 450px;
-  margin: auto;
-  background: #ffffff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 40px 55px 45px 55px;
-  border-radius: 15px;
-  transition: all .3s;
+ width: 450px;
+ margin: auto;
+ background: #ffffff;
+ box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+ padding: 40px 55px 45px 55px;
+ border-radius: 15px;
+ transition: all 0.3s;
 }
 
 .auth-wrapper .form-control:focus {
-  border-color: #167bff;
-  box-shadow: none;
+ border-color: #167bff;
+ box-shadow: none;
 }
 
 .auth-wrapper h3 {
-  text-align: center;
-  margin: 0;
-  line-height: 1;
-  padding-bottom: 20px;
+ text-align: center;
+ margin: 0;
+ line-height: 1;
+ padding-bottom: 20px;
 }
 
 .custom-control-label {
-  font-weight: 400;
+ font-weight: 400;
 }
 
 .forgot-password,
 .forgot-password a {
-  text-align: right;
-  font-size: 13px;
-  padding-top: 10px;
-  color: #7f7d7d;
-  margin: 0;
+ text-align: right;
+ font-size: 13px;
+ padding-top: 10px;
+ color: #7f7d7d;
+ margin: 0;
 }
 
 .forgot-password a {
-  color: #167bff;
+ color: #167bff;
+}
+.form-control {
+ border: 1px solid #167bff !important;
+ border-radius: 30px !important;
+ background: transparent !important;
+ color: #167bff !important;
+ box-shadow: none !important;
+ margin: 20px 0 !important;
+ padding: 10px 20px !important;
+}
+.signup-main-container {
+ width: 30%;
+ margin: 0% auto;
+}
+.cover-img-container {
+ width: 100%;
+ height: 255px;
+ position: relative;
+}
+.cover-img-container > img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+}
+.cover-img-container > h1 {
+ font-size: 24px;
+ color: white;
+ position: absolute;
+ bottom: 10%;
+ left: 50%;
+ transform: translateX(-50%);
+}
+.signup-content-contianer {
+ padding: 30px 50px;
+}
+.sign-up-btn {
+ width: 100% !important;
+ background: #062e00 !important;
+ outline: none !important;
+ border: none !important;
+ border-radius: 30px !important;
+ padding: 10px 20px !important;
+}
+.line {
+ width: 30px;
+ height: 2px;
+ background: #167bff;
+ margin: 50px auto;
+ opacity: 0.5;
+}
+.login-with-google-btn {
+ width: 100%;
+ background: transparent;
+ outline: none;
+ border: 1px solid #167bff;
+ border-radius: 30px;
+ padding: 10px 20px;
+ color: #167bff;
+ text-transform: uppercase;
+ font-size: 14px;
+ position: relative;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+.login-with-google-btn > i {
+ position: absolute;
+ left: 20px;
 }
 
+@media only screen and (max-width: 768px) {
+ .signup-main-container {
+  width: 100%;
+ }
+}
+@media only screen and (min-width: 769px) {
+ .signup-main-container {
+  width: 50%;
+  border: 1px solid gray;
+ }
+}
+@media only screen and (min-width: 992px) {
+ .signup-main-container {
+  width: 40%;
+ }
+}
+@media only screen and (min-width: 1200px) {
+ .signup-main-container {
+  width: 30%;
+ }
+}
