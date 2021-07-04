@@ -2,24 +2,27 @@ import React, { Component } from "react";
 import { withRouter } from "react-router";
 import AppServices from "../services/AppService";
 import ValidationService from "../services/ValidationService";
+import BlockchainService from "../services/BlockchainService";
 import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 import CoverImg from "../assets/images/Header.png";
+import CryptoJs from 'crypto-js';
+
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       user: {
-        email: "",
+        username: "",
         password: "",
-        confirmPass: "",
       },
     };
 
     this.appService = new AppServices();
     this.validationService = new ValidationService();
+    this.blockchainService = new BlockchainService();
+
   }
 
   setValue = (value, type) => {
@@ -28,36 +31,48 @@ class SignIn extends Component {
     this.setState({ user });
   };
 
-  handleUser = () => {
+  handleUser = async () => {
     let user = this.state.user;
-    debugger;
     console.log("User = ", user);
-    let isEamilValid = this.validationService.isEmailValid(user.email);
+    let isUserNameValid = this.validationService.isValidUserName(user.username);
     let isPassValid = this.validationService.isPasswordStrong(user.password);
-    let isPasswordMatched = this.validationService.isPasswordMatched(
-      user.password,
-      user.confirmPass
-    );
 
     if (
-      isEamilValid.success &&
-      isPassValid.success &&
-      isPasswordMatched.success
+      isUserNameValid.success &&
+      isPassValid.success
     ) {
-      this.props.notify("success", "Login successfully");
-      setTimeout(() => {
-        this.props.history.push("/home");
-      }, 2000);
+
+      let userName = user.username;
+      let passwordHash = this.hashIt(user.password)
+
+      let signInAction = this.blockchainService.signInAction(userName, passwordHash, true)
+
+      const result = await this.blockchainService.defaultPushAction(signInAction);
+      console.log("Result = ", result);
+      if (result.success) {
+        this.props.notify("success", "Login successfully");
+        this.appService
+        setTimeout(() => {
+          this.props.history.push("/home");
+        }, 2000);
+      } else {
+        this.props.notify("error", result.message);
+      }
+
     } else {
-      if (!isEamilValid.success) {
-        this.props.notify("error", isEamilValid.message);
+      if (!isUserNameValid.success) {
+        this.props.notify("error", isUserNameValid.message);
       } else if (!isPassValid.success) {
         this.props.notify("error", isPassValid.message);
-      } else if (!isPasswordMatched.success) {
-        this.props.notify("error", isPasswordMatched.message);
       }
     }
   };
+
+  hashIt = (password) => {
+    const hashed = CryptoJs.SHA256(password).toString()
+    return hashed
+  }
+
 
   render() {
     return (
@@ -66,28 +81,21 @@ class SignIn extends Component {
           <img src={CoverImg} alt="cover" />
         </div>
         <div className="signup-content-contianer">
+
           <TextInput
-            label={"Email"}
-            type={"email"}
-            placeholder={"Enter email"}
+            label={"User Name"}
+            type={"text"}
+            placeholder={"Enter EOS username"}
             setInput={this.setValue}
-            valueType={"email"}
-            sync={true}
+            valueType={"username"}
           />
+
           <TextInput
             label={"Password"}
             type={"password"}
             placeholder={"Enter password"}
             setInput={this.setValue}
             valueType={"password"}
-          />
-
-          <TextInput
-            label={"Confirm Password"}
-            type={"password"}
-            placeholder={"Enter password"}
-            setInput={this.setValue}
-            valueType={"confirmPass"}
           />
 
           <Button label={"Continue"} onClick={this.handleUser} />

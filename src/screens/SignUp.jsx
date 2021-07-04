@@ -61,7 +61,7 @@ class SignUp extends Component {
       if (result.success) {
         this.props.notify("success", "Accuount created successfully");
         setTimeout(() => {
-          this.props.history.push("/home");
+          this.props.history.push("/");
         }, 2000);
       } else {
         this.props.notify("error", result.message);
