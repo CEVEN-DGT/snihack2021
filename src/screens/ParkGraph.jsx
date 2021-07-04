@@ -1,43 +1,7 @@
 import React from "react";
-// import { Chart } from "react-charts";
 import { ResponsiveLine } from "@nivo/line";
-// import data from './data.json'
 
 export default function ParkGraph() {
- //  const data = React.useMemo(
- //   () => [
- //    {
- //     label: "Series 1",
- //     data: [
- //      [0, 1],
- //      [1, 2],
- //      [2, 4],
- //      [3, 2],
- //      [4, 7],
- //     ],
- //    },
- //    {
- //     label: "Series 2",
- //     data: [
- //      [0, 3],
- //      [1, 1],
- //      [2, 5],
- //      [3, 6],
- //      [4, 4],
- //     ],
- //    },
- //   ],
- //   []
- //  );
- //  const axes = React.useMemo(
- //   () => [
- //    { primary: true, type: "linear", position: "bottom" },
- //    { type: "linear", position: "left", stacked: true },
- //   ],
- //   []
- //  );
- //  const series = React.useMemo(() => ({ type: "area" }), []);
-
  const data = [
   {
    id: "japan",
@@ -80,8 +44,8 @@ export default function ParkGraph() {
  ];
  return (
   <div className="signup-main-container graph-main-container">
+   <button className="home-logout-btn">Checkout</button>
    <div className="graph-chart-container">
-    {/* <Chart data={data} axes={axes} series={series}  /> */}
     <ResponsiveLine
      data={data}
      margin={{
@@ -105,37 +69,30 @@ export default function ParkGraph() {
      curve="cardinal"
      axisBottom={{
       orient: "bottom",
-      tickSize: 5,
-      tickPadding: 5,
+      tickSize: 0,
+      tickPadding: 25,
       tickRotation: 0,
-      legend: "transportation",
-      legendOffset: 36,
-      legendPosition: "center",
      }}
      axisLeft={{
       orient: "left",
-      tickSize: 5,
-      tickPadding: 5,
+      tickSize: 0,
+      tickPadding: 25,
       tickRotation: 0,
-      legend: "count",
-      legendOffset: -40,
-      legendPosition: "center",
+      legendOffset: -200,
      }}
      dotSize={10}
-     dotColor="inherit:darker(0.3)"
      dotBorderWidth={2}
-     dotBorderColor="#ffffff"
      enableDotLabel={true}
-     dotLabel="y"
-     dotLabelYOffset={-12}
      animate={true}
-     motionStiffness={90}
      enableArea={true}
-     areaOpacity={0.5}
+     areaOpacity={0.3}
      motionDamping={15}
+     enableGridX={false}
+     enableGridY={false}
+     colors="#062e00"
     />
    </div>
-   <div className="graph-details-container">Details</div>
+   <div className="graph-details-container"></div>
   </div>
  );
 }
