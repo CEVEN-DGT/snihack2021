@@ -9,12 +9,23 @@ export default class AppServices extends React.Component {
       return false
   }
 
-  setUserData = (username) => {
+  setUserData = (username, password) => {
     localStorage.setItem("inValidIADf", username)
+    localStorage.setItem("iPasTvawod", password)
   }
 
   removeUserData = () => {
     localStorage.removeItem("inValidIADf")
+    localStorage.removeItem("iPasTvawod")
+
+  }
+
+  getUserData = () => {
+    let user = { username: "", password: "" }
+    user.username = localStorage.getItem("inValidIADf")
+    user.password = localStorage.getItem("iPasTvawod")
+
+    return user
   }
 
   login = async (ual) => {
