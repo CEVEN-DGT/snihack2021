@@ -149,11 +149,13 @@ Error Details:
 assertion failure with message: the parsed user login status is same as stored one.
 pending console output:
 ```
+
+### ACTION - logout
 * user logout
 ```console
-$ cleost push action cevenparksio logininout '["cpusr1111111", "48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4a4017a76", "0"]' -p cevenparksio@active
+$ cleost push action cevenparksio logout '["cpusr1111111"]' -p cevenparksio@active
 executed transaction: 264cb2ce627f56585d7590932a6c20edc04eb73ce8b98ffa4c2197b7fe6ced3a  136 bytes  276 us
-#  cevenparksio <= cevenparksio::logininout     {"username":"cpusr1111111","password_hash":"48357a7f102bb38d88d1aa5b7f887f70c0309f31a78cd57bf30e34e4...
+#  cevenparksio <= cevenparksio::logout     {"username":"cpusr1111111"
 warning: transaction executed locally, but may not be confirmed by the network yet         ]
 ```
 
