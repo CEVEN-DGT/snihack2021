@@ -176,4 +176,19 @@ export default class BlockchainService extends React.Component {
     return action;
   };
 
+  enteryExitParkAction = (username, park_id, is_checked_in) => {
+    let contract = this.mainContract;
+    let actionName = "enterexitpark";
+    let authorization = this.getAuthorization(this.mainContract, "active");
+
+    let data = {
+      username,
+      park_id,
+      is_checked_in
+    };
+
+    let action = this.getAction(contract, actionName, data, [authorization]);
+    return action;
+  };
+
 }
