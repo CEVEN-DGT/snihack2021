@@ -7,6 +7,7 @@ import TextInput from "../components/TextInput";
 import Button from "../components/Button";
 import CoverImg from "../assets/images/Header.png";
 import CryptoJs from "crypto-js";
+import { Link } from "react-router-dom";
 
 class SignUp extends Component {
  constructor(props) {
@@ -21,20 +22,9 @@ class SignUp extends Component {
    },
    sync: false,
   };
-
-  this.appService = new AppServices();
-  this.validationService = new ValidationService();
-  this.blockchainService = new BlockchainService();
  }
 
- setValue = (value, type) => {
-  let user = this.state.user;
-  user[type] = value;
-  this.setState({ user });
- };
-
  handleUser = async (sync) => {
-  this.setState({ sync: true });
   let user = this.state.user;
   let isEamilValid = this.validationService.isEmailValid(user.email);
   let isPassValid = this.validationService.isPasswordStrong(user.password);
@@ -66,7 +56,7 @@ class SignUp extends Component {
    if (result.success) {
     this.props.notify("success", "Accuount created successfully");
     setTimeout(() => {
-     this.props.history.push("/home");
+     this.props.history.push("/");
     }, 2000);
    } else {
     this.props.notify("error", result.message);
@@ -154,6 +144,9 @@ class SignUp extends Component {
      />
 
      <Button label={"Continue"} onClick={() => this.handleUser(false)} />
+     <Link to="/" className="have-account-link">
+      Have an account?
+     </Link>
      <div className="line" />
      <button className="login-with-google-btn">
       <i className="fab fa-google-plus-g"></i>Login with google

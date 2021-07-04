@@ -2,8 +2,20 @@ import React from "react";
 
 export default class AppServices extends React.Component {
   isLogin = () => {
-    return localStorage.getItem("UALInvalidateAt");
-  };
+    let userData = localStorage.getItem("inValidIADf");
+    if (userData)
+      return true
+    else
+      return false
+  }
+
+  setUserData = (username) => {
+    localStorage.setItem("inValidIADf", username)
+  }
+
+  removeUserData = () => {
+    localStorage.removeItem("inValidIADf")
+  }
 
   login = async (ual) => {
     if (ual) await ual.showModal();
