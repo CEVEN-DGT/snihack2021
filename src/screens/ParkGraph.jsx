@@ -92,7 +92,20 @@ export default function ParkGraph() {
      colors="#062e00"
     />
    </div>
-   <div className="graph-details-container"></div>
+   <div className="graph-details-container">
+    <div>
+     <h3>
+      <span>{(234566).toLocaleString()}</span>
+      <p>Elevation Gain (m)</p>
+     </h3>
+    </div>
+    <div>
+     <h3>
+      <span>826</span>
+      <p>Max Elevation (m)</p>
+     </h3>
+    </div>
+   </div>
   </div>
  );
 }

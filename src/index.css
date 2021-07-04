@@ -285,6 +285,24 @@ html,
  height: 70%;
  margin: 10px auto;
 }
+.graph-details-container {
+ margin-top: 50px;
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+}
+.graph-details-container > div > h3 {
+ font-size: 16px;
+ color: var(--primaryGreen);
+ text-align: center;
+}
+.graph-details-container > div > h3 > p {
+ font-size: 14px;
+ color: var(--primaryGreen);
+ text-align: center;
+ font-weight: normal;
+ margin-top: 5px;
+}
 @media only screen and (max-width: 768px) {
  .signup-main-container {
   width: 100%;
