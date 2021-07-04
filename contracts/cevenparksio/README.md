@@ -149,12 +149,33 @@ warning: transaction executed locally, but may not be confirmed by the network y
 ```
 
 ### ACTION - addparkdata
-
-### ACTION - editparkdata
+* added park data via python [script](../data/uppark2.py)
+* view the data of park with id - `17000000001625384306` [here](https://jungle3.bloks.io/account/cevenparksio?loadContract=true&tab=Tables&table=parkinfo&account=cevenparksio&scope=17000000001625384306&limit=100)
 
 ### ACTION - delparktree
+* deleted the park tree
+```console
+$ cleost push action cevenparksio delparktree '['17000000001625384306', '4']' -p cevenparksio@active
+executed transaction: bdc25ce7c5596ce6066f1783c35dcdc9dba305892cfca5da12de8fdd949d3b52  112 bytes  267 us
+#  cevenparksio <= cevenparksio::delparktree    {"park_id":"17000000001625384306","tree_id":4}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
 
 ### ACTION - entrexitpark
+* a person enters a park with id - `17000000001625384306`
+```console
+$ cleost push action cevenparksio entrexitpark '["cpusr1111111", "17000000001625384306", "1"]' -p cevenparksio@active
+executed transaction: 5b6d2f8fdf1ff5e4c0ef84a352f291c9a2a4f8cec322200e669eab94b54ba286  112 bytes  331 us
+#  cevenparksio <= cevenparksio::entrexitpark   {"username":"cpusr1111111","park_id":"17000000001625384306","is_checked_in":1}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
+* a person exits a park with id - `17000000001625384306`
+```console
+$ cleost push action cevenparksio entrexitpark '["cpusr1111111", "17000000001625384306", "0"]' -p cevenparksio@active
+executed transaction: 7ca9ac3a5f1704fa6b21a7c60013f1f49d56dcb702baa19bd7625844395d28d9  112 bytes  491 us
+#  cevenparksio <= cevenparksio::entrexitpark   {"username":"cpusr1111111","park_id":"17000000001625384306","is_checked_in":0}
+warning: transaction executed locally, but may not be confirmed by the network yet         ]
+```
 
 
 ## References

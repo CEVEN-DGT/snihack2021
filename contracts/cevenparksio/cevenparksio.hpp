@@ -35,6 +35,7 @@ using std::string;
 using std::vector;
 using std::map;
 using std::make_pair;
+using std::count;
 // using std::regex;
 
 CONTRACT cevenparksio : public contract {
@@ -123,52 +124,27 @@ public:
 	 * @param species - species 
 	 * @param latin_species - latin species 
 	 * @param year_planted - year planted
+	 * @param diameter_canopy - diameter_canopy
 	 * @param dbh - dbh
 	 * @param height - height
 	 * @param biomass - biomass
 	 * 
-	 * @pre - park id to be created
+	 * @pre - park id to be created externally
 	 */
-	ACTION addparkdata( uint64_t tree_id,
-						double lon,
-						double lat,
-						string species,
-						string latin_species,
-						uint16_t year_planted,
-						float dbh,
-						float height,
-						float biomass
-						);
-
-
-	/**
-	 * @brief - edit park data
-	 * @details - Here, park data is to be edited
-	 * 
-	 * @param park_id - park id 
-	 * @param tree_id - tree id 
-	 * @param lon - lon 
-	 * @param lat - lat 
-	 * @param species - species 
-	 * @param latin_species - latin species 
-	 * @param year_planted - year planted
-	 * @param dbh - dbh
-	 * @param height - height
-	 * @param biomass - biomass
-	 * 
-	 * @pre - park id exists
-	 */
-	ACTION editparkdata( uint64_t park_id,
+	ACTION addparkdata( 
+						uint64_t park_id,
 						uint64_t tree_id,
 						double lon,
 						double lat,
 						string species,
 						string latin_species,
 						uint16_t year_planted,
+						float diameter_canopy,
 						float dbh,
 						float height,
 						float biomass
 						);
+
 
 	/**
 	 * @brief - delete park tree
@@ -215,7 +191,7 @@ public:
 	using profile_index = multi_index<"profile"_n, profile>;
 
 	// ==================================================================================
-	// scope: self
+	// scope: park_id
 	TABLE userentry
 	{
 		name username;
@@ -227,27 +203,26 @@ public:
 	using userentry_index = multi_index<"userentry"_n, userentry>;
 
 	//-----------------------------------------------------------------------------------
-	// scope: park_id 
+	// scope: park_id (to be created externally)
 	TABLE parkinfo
 	{
-		uint64_t park_id;		// used just as primary_key for enterpark ACTION
 		uint64_t tree_id;
+		// uint64_t park_id;
 		double lon;
 		double lat;
 		string species;
 		string latin_species;
 		uint16_t year_planted;
+		float diameter_canopy;
 		float dbh;
 		float height;
 		float biomass;
 
-		auto primary_key() const { return park_id; }
-		uint64_t by_treeid() const { return tree_id; }
+		auto primary_key() const { return tree_id; }
+		// uint64_t by
 	};
 
-	using parkinfo_index = multi_index<"parkinfo"_n, parkinfo,
-								indexed_by< "bytreeid"_n, const_mem_fun<parkinfo, uint64_t, &parkinfo::by_treeid>>
-								>;
+	using parkinfo_index = multi_index<"parkinfo"_n, parkinfo>;
 
 	//-----------------------------------------------------------------------------------
 	// scope: self

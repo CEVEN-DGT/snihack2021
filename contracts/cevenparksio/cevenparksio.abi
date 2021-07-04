@@ -8,6 +8,10 @@
             "base": "",
             "fields": [
                 {
+                    "name": "park_id",
+                    "type": "uint64"
+                },
+                {
                     "name": "tree_id",
                     "type": "uint64"
                 },
@@ -30,6 +34,10 @@
                 {
                     "name": "year_planted",
                     "type": "uint16"
+                },
+                {
+                    "name": "diameter_canopy",
+                    "type": "float32"
                 },
                 {
                     "name": "dbh",
@@ -66,52 +74,6 @@
                 {
                     "name": "username",
                     "type": "name"
-                }
-            ]
-        },
-        {
-            "name": "editparkdata",
-            "base": "",
-            "fields": [
-                {
-                    "name": "park_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "tree_id",
-                    "type": "uint64"
-                },
-                {
-                    "name": "lon",
-                    "type": "float64"
-                },
-                {
-                    "name": "lat",
-                    "type": "float64"
-                },
-                {
-                    "name": "species",
-                    "type": "string"
-                },
-                {
-                    "name": "latin_species",
-                    "type": "string"
-                },
-                {
-                    "name": "year_planted",
-                    "type": "uint16"
-                },
-                {
-                    "name": "dbh",
-                    "type": "float32"
-                },
-                {
-                    "name": "height",
-                    "type": "float32"
-                },
-                {
-                    "name": "biomass",
-                    "type": "float32"
                 }
             ]
         },
@@ -198,10 +160,6 @@
             "base": "",
             "fields": [
                 {
-                    "name": "park_id",
-                    "type": "uint64"
-                },
-                {
                     "name": "tree_id",
                     "type": "uint64"
                 },
@@ -224,6 +182,10 @@
                 {
                     "name": "year_planted",
                     "type": "uint16"
+                },
+                {
+                    "name": "diameter_canopy",
+                    "type": "float32"
                 },
                 {
                     "name": "dbh",
@@ -308,11 +270,6 @@
         {
             "name": "deluser",
             "type": "deluser",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "editparkdata",
-            "type": "editparkdata",
             "ricardian_contract": ""
         },
         {

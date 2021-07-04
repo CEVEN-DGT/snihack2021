@@ -141,6 +141,7 @@ void cevenparksio::logininout( const name& username,
 
 }
 
+// --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::deluser( const name& username ) {
 	require_auth(get_self());
 
@@ -153,70 +154,57 @@ void cevenparksio::deluser( const name& username ) {
 }
 
 // --------------------------------------------------------------------------------------------------------------------
-void cevenparksio::addparkdata( uint64_t tree_id,
-								double lon,
-								double lat,
-								string species,
-								string latin_species,
-								uint16_t year_planted,
-								float dbh,
-								float height,
-								float biomass
-								) {
-	require_auth(get_self());
-
-	uint64_t park_id = 17'000'000'000'000'000'000 + (uint64_t)now();
-
-	parkinfo_index parkinfo_table(get_self(), park_id);
-	auto parkinfo_it = parkinfo_table.find(park_id);
-
-	check(parkinfo_it == parkinfo_table.end(), "park id already exists, try again");
-
-	parkinfo_table.emplace(get_self(), [&](auto& row){
-		row.park_id = park_id;
-		row.tree_id = tree_id;
-		row.lon = lon;
-		row.lat = lat;
-		row.species = species;
-		row.latin_species = latin_species;
-		row.year_planted = year_planted;
-		row.dbh = dbh;
-		row.height = height;
-		row.biomass = biomass;
-	});
-}
-
-// --------------------------------------------------------------------------------------------------------------------
-void cevenparksio::editparkdata( uint64_t park_id, 
+void cevenparksio::addparkdata( 
+								uint64_t park_id,
 								uint64_t tree_id,
 								double lon,
 								double lat,
 								string species,
 								string latin_species,
 								uint16_t year_planted,
+								float diameter_canopy,
 								float dbh,
 								float height,
 								float biomass
 								) {
 	require_auth(get_self());
 
+	// uint64_t park_id = 17'000'000'000'000'000'000 + (uint64_t)now();		// to be created externally
+
 	parkinfo_index parkinfo_table(get_self(), park_id);
-	auto parkinfo_it = parkinfo_table.find(park_id);
+	auto parkinfo_it = parkinfo_table.find(tree_id);
 
-	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
+	if (parkinfo_it == parkinfo_table.end()) {
+		parkinfo_table.emplace(get_self(), [&](auto& row){
+			row.tree_id = tree_id;
+			// row.park_id = park_id;
+			row.lon = lon;
+			row.lat = lat;
+			row.species = species;
+			row.latin_species = latin_species;
+			row.year_planted = year_planted;
+			row.diameter_canopy = diameter_canopy;
+			row.dbh = dbh;
+			row.height = height;
+			row.biomass = biomass;
+		});
+	} else {
+		parkinfo_table.modify( parkinfo_it, get_self(), [&](auto& row){
+			if(lon != 0) row.lon = lon;
+			if(lat != 0) row.lat = lat;
+			if(!species.empty()) row.species = species;
+			if(!latin_species.empty()) row.latin_species = latin_species;
+			if(year_planted != 0) row.year_planted = year_planted;
+			if(diameter_canopy != 0) row.diameter_canopy = diameter_canopy;
+			if(dbh != 0) row.dbh = dbh;
+			if(height != 0) row.height = height;
+			if(biomass != 0) row.biomass = biomass;
+		});
+	}
 
-	parkinfo_table.modify( parkinfo_it, get_self(), [&](auto& row){
-		if(tree_id != 0) row.tree_id = tree_id;
-		if(lon != 0) row.lon = lon;
-		if(lat != 0) row.lat = lat;
-		if(!species.empty()) row.species = species;
-		if(!latin_species.empty()) row.latin_species = latin_species;
-		if(year_planted != 0) row.year_planted = year_planted;
-		if(dbh != 0) row.dbh = dbh;
-		if(height != 0) row.height = height;
-		if(biomass != 0) row.biomass = biomass;
-	});
+
 }
+
 
 // --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::delparktree( uint64_t park_id,
@@ -225,15 +213,11 @@ void cevenparksio::delparktree( uint64_t park_id,
 	require_auth(get_self());
 
 	parkinfo_index parkinfo_table(get_self(), park_id);
-	auto parkinfo_it = parkinfo_table.find(park_id);
+	auto parkinfo_it = parkinfo_table.find(tree_id);
 
-	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
+	check(parkinfo_it != parkinfo_table.end(), "tree_id doesn\'t exist");
 
-	auto treeid_idx = parkinfo_table.get_index<"bytreeid"_n>();
-	auto treeid_it = treeid_idx.find(tree_id);
-
-	check(treeid_it != treeid_idx.end(), "tree id doesn\'t exist");
-	treeid_idx.erase(treeid_it);
+	parkinfo_table.erase(parkinfo_it);
 
 }
 
@@ -247,11 +231,17 @@ void cevenparksio::entrexitpark( const name& username,
 
 	// check if the park_id exists
 	parkinfo_index parkinfo_table(get_self(), park_id);
-	auto parkinfo_it = parkinfo_table.find(park_id);
+	// auto parkinfo_it = parkinfo_table.find(park_id);
 
-	check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
+	// check(parkinfo_it != parkinfo_table.end(), "park id doesn\'t exist");
 
-	userentry_index userentry_table(get_self(), get_self().value);
+	// compute the table size
+	// NOTE: applicable for few rows
+	// TODO: assign park_id into the table fields & iterate using `auto parkinfo_it = parkinfo_table.find(park_id)`
+	auto size = std::distance(parkinfo_table.cbegin(),parkinfo_table.cend());
+	check(size > 0, "park id doesn\'t exist");
+
+	userentry_index userentry_table(get_self(), park_id);
 	auto userentry_it = userentry_table.find(username.value);
 
 	if (userentry_it == userentry_table.end()) {
