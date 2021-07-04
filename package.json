@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.6.0",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
+    "crypto-js": "^4.0.0",
     "eosjs": "^22.0.0",
     "gsap": "^3.5.1",
     "node-sass": "^4.14.1",

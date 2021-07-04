@@ -40,5 +40,17 @@ export default class ValidationService extends React.Component {
     return res
   }
 
+  isValidUserName = (username) => {
+    let res = { success: false, message: "invalid username" }
+    if (username !== '') {
+      const regx = /^[a-z1-5.]{12}$/;
+      res.success = regx.test(username);
+
+      if (res.success)
+        res.message = ""
+    }
+    return res
+  }
+
 
 }
