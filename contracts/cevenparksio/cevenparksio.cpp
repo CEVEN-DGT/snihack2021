@@ -142,6 +142,23 @@ void cevenparksio::logininout( const name& username,
 }
 
 // --------------------------------------------------------------------------------------------------------------------
+void cevenparksio::logout( const name& username ) {
+	require_auth(get_self());
+
+	profile_index profile_table(get_self(), get_self().value);
+	auto profile_it = profile_table.find(username.value);
+
+	check(profile_it != profile_table.end(), "username doesn\'t exist. Please, sign-up first");
+	check(profile_it->is_logged_in == 1, "user is not logged in");
+
+	profile_table.modify(profile_it, get_self(), [&](auto& row) {
+		row.is_logged_in = 0;		
+	});
+
+}
+
+
+// --------------------------------------------------------------------------------------------------------------------
 void cevenparksio::deluser( const name& username ) {
 	require_auth(get_self());
 

@@ -107,6 +107,18 @@ public:
 						);
 
 	/**
+	 * @brief - login out
+	 * @details - login out
+	 * 
+	 * @param username - username
+	 * 
+	 * @pre - username must be logged in
+	 */
+	ACTION logout( const name& username );
+
+
+
+	/**
 	 * @brief - delete user
 	 * @details - delete username
 	 * 
