@@ -28,6 +28,7 @@ export default function Home(props) {
 
  return (
   <div className="signup-main-container home-main-container">
+   <button className="home-logout-btn">Logout</button>
    <HomeContentTab
     title="Checkin"
     img={CheckInImg}
