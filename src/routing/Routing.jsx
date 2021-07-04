@@ -4,6 +4,7 @@ import CheckIn from "../screens/Checkin";
 import Home from "../screens/Home";
 import ParkGraph from "../screens/ParkGraph";
 import SignIn from "../screens/SignIn";
+import SignUp from "../screens/SignUp";
 import PrivateRoute from "./PrivateRoute";
 
 
@@ -12,7 +13,11 @@ class Routing extends React.Component {
     return (
       <Router>
         <Switch>
+
           <Route exact path="/" render={() => <SignIn {...this.props} />} />
+
+          <Route exact path="/signup" render={() => <SignUp {...this.props} />} />
+
           <PrivateRoute
             exact
             path="/home"
